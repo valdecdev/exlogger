@@ -13,7 +13,7 @@ defmodule ExLogger.Backend do
 
       @levels ExLogger.levels
       @top_level hd(@levels)
-      defrecordp :state, :state, state: nil, log_level: nil
+      defstruct :state, :state, state: nil, log_level: nil
 
       def init(options) do
         log_level = options[:log_level] || :application.get_all_env(:exlogger)[:log_level] ||

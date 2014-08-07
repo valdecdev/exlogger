@@ -2,14 +2,21 @@ defmodule ExLogger.ErrorLoggerHandler do
   use GenEvent.Behaviour
   use ExLogger
 
-  defrecord CrashReport, registered_name: nil, pid: nil, error_info: nil, neighbours: nil do
-    def construct(proc, neighbours) do
-      new(proc).neighbours(neighbours)
+  defmodule CrashReport do
+    defstruct registered_name: nil, pid: nil, error_info: nil, neighbours: nil do
+      def construct(proc, neighbours) do
+        new(proc).neighbours(neighbours)
+      end
     end
   end
 
-  defrecord Reason, reason: nil
-  defrecord Format, format: nil, args: []
+  defmodule Reason do
+    defstruct reason: nil
+  end
+  
+  defmodule Format do
+    defstruct format: nil, args: []
+  end
 
   def init(_) do
     {:ok, nil}

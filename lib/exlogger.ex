@@ -49,7 +49,7 @@ defmodule ExLogger do
 
 
   for level <- @levels do
-    defmacro unquote(level)(msg // nil, object // []) do
+    defmacro unquote(level)(msg \\ nil, object \\ []) do
       excluded_levels = unless nil?(__CALLER__.module) do
         Module.get_attribute __CALLER__.module, :exlogger_excluded_levels
       else

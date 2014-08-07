@@ -1,7 +1,7 @@
 defmodule ExLogger.Backend.IO do
   use ExLogger.Backend
 
-  defrecordp :backend_state, :backend_state, file: nil, ansi: nil
+  defstruct :backend_state, :backend_state, file: nil, ansi: nil
 
   def backend_init(options) do
     file = options[:file] || :stdio

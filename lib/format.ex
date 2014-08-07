@@ -6,19 +6,19 @@ defmodule ExLogger.Format do
   defp expand_message(<< "${", rest :: binary >>, acc, nil) do
     expand_message(rest, acc, "")
   end
-  defp expand_message(<< a :: [1, binary], rest :: binary >>, [], nil) do
+  defp expand_message(<< a :: size(1), rest :: binary >>, [], nil) do
     expand_message(rest, [a], nil)
   end
-  defp expand_message(<< a :: [1, binary], rest :: binary >>, [string|tail], nil) when is_binary(string) do
+  defp expand_message(<< a :: size(1), rest :: binary >>, [string|tail], nil) when is_binary(string) do
     expand_message(rest, [string <> a|tail], nil)
   end
-  defp expand_message(<< a :: [1, binary], rest :: binary >>, acc, nil) do
+  defp expand_message(<< a :: size(1), rest :: binary >>, acc, nil) do
     expand_message(rest, [a|acc], nil)
   end
   defp expand_message(<< "}", rest :: binary >>, acc, name_acc) do
     expand_message(rest, [convert_name(name_acc)|acc], nil)
   end
-  defp expand_message(<< a :: [1, binary], rest :: binary >>, acc, name_acc) do
+  defp expand_message(<< a :: size(1), rest :: binary >>, acc, name_acc) do
     expand_message(rest, acc, name_acc <> a)
   end
   defp expand_message("", acc, _) do
@@ -46,8 +46,8 @@ defmodule ExLogger.Format do
 
   defp convert_name(name_acc) do
     case String.split(name_acc,".") do
-      [name] -> binary_to_atom(name)
-      names -> (for name <- names, do: binary_to_atom(name))
+      [name] -> String.to_atom(name)
+      names -> (for name <- names, do: String.to_atom(name))
     end
   end
 end

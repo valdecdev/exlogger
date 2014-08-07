@@ -10,7 +10,9 @@ defmodule ExLogger.BackendWatcher do
     :gen_server.start_link(__MODULE__,[event, module, options], [])
   end
 
-  defrecordp :state, :state, event: nil, module: nil, options: nil
+  defmodule :state do
+    defstruct :state, event: nil, module: nil, options: nil
+  end
 
   def init([event, module, options]) do
     install_handler(event, module, options)
