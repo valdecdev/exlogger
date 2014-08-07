@@ -1,14 +1,15 @@
 defmodule ExLogger do
+  require Record
 
   @type  object_key :: atom
   @type  object :: [{atom, term}]
   @type  message :: String.t
 
-  defrecord Message, timestamp: nil,
+  Record.defrecord Message, timestamp: nil,
                      level: nil, message: nil, object: [],
                      module: nil, file: nil, line: nil, pid: nil
 
-  defrecord MFA, module: nil, function: nil, arguments: [], properties: [] do
+  Record.defrecord MFA, module: nil, function: nil, arguments: [], properties: [] do
 
     def construct([head|_]) do
       construct(head)
@@ -22,12 +23,12 @@ defmodule ExLogger do
     end
 
     def construct(nil) do
-      __MODULE__[]
+      __MODULE__
     end
 
   end
 
-  @levels %w(verbose debug info notice warning error critical alert emergency)a
+  @levels ~w(verbose debug info notice warning error critical alert emergency)a
   def levels, do: @levels
 
   def register_backend({backend, options}) when is_atom(backend) do
@@ -47,7 +48,7 @@ defmodule ExLogger do
   end
 
 
-  lc level inlist @levels do
+  for level <- @levels do
     defmacro unquote(level)(msg // nil, object // []) do
       excluded_levels = unless nil?(__CALLER__.module) do
         Module.get_attribute __CALLER__.module, :exlogger_excluded_levels
@@ -104,7 +105,7 @@ defmodule ExLogger do
     default_excluded_levels = quote do
       cond do
         Enum.any?(:application.which_applications, fn({a, _, _}) -> a == :mix end) and Mix.env == :prod ->
-          %w(debug verbose)a
+          ~w(debug verbose)a
         true -> []
       end
     end
