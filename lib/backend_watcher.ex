@@ -18,7 +18,7 @@ defmodule ExLogger.BackendWatcher do
   end
 
   def handle_info({:gen_event_EXIT, module, reason},
-                  state(module: module) = s) when reason in %w(normal shutdown)a do
+                  state(module: module) = s) when reason in ~w(normal shutdown)a do
     {:stop, :normal, s}
   end
 
